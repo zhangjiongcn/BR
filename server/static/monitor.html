@@ -1,0 +1,383 @@
+<html>
+<head>
+<script>
+var monitordata='';
+var monitordata_noprd='';
+
+function loadXMLDoc(){
+    if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }else{
+        // code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange=function(){
+    if (xmlhttp.readyState==4 && xmlhttp.status==200){
+            monitordata=xmlhttp.responseText;
+            adddiv();
+        }
+    }
+
+    xmlhttp.open("GET","/monitorlist/",true);
+    xmlhttp.send();
+};
+
+function loadXMLDoc_noprd(){
+    if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp2=new XMLHttpRequest();
+    }else{
+        // code for IE6, IE5
+        xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp2.onreadystatechange=function(){
+    if (xmlhttp2.readyState==4 && xmlhttp2.status==200){
+        monitordata_noprd=xmlhttp2.responseText;
+            adddiv_noprd();
+        }
+    }
+
+    xmlhttp2.open("GET","/monitorlist_noprd/",true);
+    xmlhttp2.send();
+};
+
+
+
+function adddiv(){
+    var objmonitordata = eval ('(' + monitordata + ')');
+
+    divname = objmonitordata[0].svrname;
+    
+    var tb = document.getElementById("tb1");
+    var svrcounts = objmonitordata.length;
+    var tmpstr="";
+    var rowid =0;
+    var iconcpu = "";
+    var iconblock = "";
+    var iconopentran = "";
+    var iconmem = "";
+    var memtotal = 0;
+    var memfree = 0;
+    var icondisk="";
+    var icondisk_red=0;
+    var icondisk_green=0;
+    var icondisk_yellow=0;
+    var icondisk_red=0;
+    var icondisk_yellow=0;
+    var cpu2a=0;
+    var cpu2b=0;
+    var diffuptime = 0;
+    var diffuptimestr = "";
+
+    while (rowid<svrcounts){
+        if (document.getElementById(objmonitordata[rowid].svrname) == null){
+            tmpstr="";
+        }else{
+            var i = document.getElementById(objmonitordata[rowid].svrname).rowIndex;
+            tb.deleteRow(i);
+        }
+
+        tmpstr="";
+        tmpstr = tmpstr + "<tr align=\"center\" id=\"" + objmonitordata[rowid].svrname + "\"><td>" + objmonitordata[rowid].svrname + "</td>";
+        
+        // diffuptime = 0;
+        // diffuptimestr = "";
+        // if (objmonitordata[rowid].hasOwnProperty("difftime")){
+        //     diffuptime = objmonitordata[rowid].difftime;
+        //     if (diffuptime>10){
+        //         diffuptimestr="_n"
+        //     }
+        // }
+
+        //cpu 2 
+        if (objmonitordata[rowid].hasOwnProperty("c")){
+            cpu2=objmonitordata[rowid].c;
+            cpu2a = cpu2[0];
+            cpu2b = cpu2[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+cpu2a+".png\" border=0 alt=\""+cpu2b+"\" title=\""+cpu2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+        // block 2
+        if (objmonitordata[rowid].hasOwnProperty("b")){
+            block2=objmonitordata[rowid].b;
+            block2a = block2[0];
+            block2b = block2[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+block2a+".png\" border=0 alt=\""+block2b+"\" title=\""+block2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+        // opentran 2
+        if (objmonitordata[rowid].hasOwnProperty("o")){
+            opentran2=objmonitordata[rowid].o;
+            opentran2a = opentran2[0];
+            opentran2b = opentran2[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+opentran2a+".png\" border=0 alt=\""+opentran2b+"\" title=\""+opentran2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+
+        // memory 2
+        if (objmonitordata[rowid].hasOwnProperty("m")){
+            mem2list=objmonitordata[rowid].m;
+            mem2a = mem2list[0];
+            mem2b = mem2list[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+mem2a+".png\" border=0 alt=\""+mem2b+"\" title=\""+mem2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+
+        // disk 2
+        icondisk = "";
+        if (objmonitordata[rowid].hasOwnProperty("di")){
+            disk2list=objmonitordata[rowid].di;
+            disk2a = disk2list[0];
+            disk2b = disk2list[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+disk2a+".png\" border=0 alt=\""+disk2b+"\" title=\""+disk2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+        // // difftime
+        // if (objmonitordata[rowid].hasOwnProperty("difftime")){
+        //     if (objmonitordata[rowid].difftime<10){
+        //         tmpstr = tmpstr + "<td></td>";
+        //     }else{
+        //         tmpstr = tmpstr + "<td> "+ objmonitordata[rowid].difftime +" </td>";
+        //     }
+        // }else{
+        //     tmpstr = tmpstr + "<td> - </td>";
+        // }
+
+        // difftime 2
+        if (objmonitordata[rowid].hasOwnProperty("dt")){
+            dt2list=objmonitordata[rowid].dt;
+            // dt2a = dt2list[0];
+            // dt2b = dt2list[1];
+            tmpstr = tmpstr + "<td> "+dt2list+" </td>";
+            // if (objmonitordata[rowid].difftime<10){
+            //     tmpstr = tmpstr + "<td></td>";
+            // }else{
+            //     tmpstr = tmpstr + "<td> "+ objmonitordata[rowid].difftime +" </td>";
+            // }
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+
+
+        tmpstr = tmpstr + "</tr>";
+        tb.innerHTML = tb.innerHTML + tmpstr;
+        rowid = rowid+1;
+
+    }
+
+
+
+
+};
+
+
+
+
+
+function adddiv_noprd(){
+    var objmonitordata = eval ('(' + monitordata_noprd + ')');
+
+    divname = objmonitordata[0].svrname;
+    
+    var tb = document.getElementById("tb2");
+    var svrcounts = objmonitordata.length;
+    var tmpstr="";
+    var rowid =0;
+    var iconcpu = "";
+    var iconblock = "";
+    var iconopentran = "";
+    var iconmem = "";
+    var memtotal = 0;
+    var memfree = 0;
+    var icondisk="";
+    var icondisk_red=0;
+    var icondisk_green=0;
+    var icondisk_yellow=0;
+    var icondisk_red=0;
+    var icondisk_yellow=0;
+    var cpu2a=0;
+    var cpu2b=0;
+    var diffuptime = 0;
+    var diffuptimestr = "";
+
+    while (rowid<svrcounts){
+        if (document.getElementById(objmonitordata[rowid].svrname) == null){
+            tmpstr="";
+        }else{
+            var i = document.getElementById(objmonitordata[rowid].svrname).rowIndex;
+            tb.deleteRow(i);
+        }
+
+        tmpstr="";
+        tmpstr = tmpstr + "<tr align=\"center\" id=\"" + objmonitordata[rowid].svrname + "\"><td>" + objmonitordata[rowid].svrname + "</td>";
+        
+        // diffuptime = 0;
+        // diffuptimestr = "";
+        // if (objmonitordata[rowid].hasOwnProperty("difftime")){
+        //     diffuptime = objmonitordata[rowid].difftime;
+        //     if (diffuptime>10){
+        //         diffuptimestr="_n"
+        //     }
+        // }
+
+        //cpu 2 
+        if (objmonitordata[rowid].hasOwnProperty("c")){
+            cpu2=objmonitordata[rowid].c;
+            cpu2a = cpu2[0];
+            cpu2b = cpu2[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+cpu2a+".png\" border=0 alt=\""+cpu2b+"\" title=\""+cpu2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+        // block 2
+        if (objmonitordata[rowid].hasOwnProperty("b")){
+            block2=objmonitordata[rowid].b;
+            block2a = block2[0];
+            block2b = block2[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+block2a+".png\" border=0 alt=\""+block2b+"\" title=\""+block2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+        // opentran 2
+        if (objmonitordata[rowid].hasOwnProperty("o")){
+            opentran2=objmonitordata[rowid].o;
+            opentran2a = opentran2[0];
+            opentran2b = opentran2[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+opentran2a+".png\" border=0 alt=\""+opentran2b+"\" title=\""+opentran2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+
+        // memory 2
+        if (objmonitordata[rowid].hasOwnProperty("m")){
+            mem2list=objmonitordata[rowid].m;
+            mem2a = mem2list[0];
+            mem2b = mem2list[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+mem2a+".png\" border=0 alt=\""+mem2b+"\" title=\""+mem2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+
+        // disk 2
+        icondisk = "";
+        if (objmonitordata[rowid].hasOwnProperty("di")){
+            disk2list=objmonitordata[rowid].di;
+            disk2a = disk2list[0];
+            disk2b = disk2list[1];
+
+            tmpstr = tmpstr + "<td><img src=\"/static/"+disk2a+".png\" border=0 alt=\""+disk2b+"\" title=\""+disk2b+"\"></td>";
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+        // // difftime
+        // if (objmonitordata[rowid].hasOwnProperty("difftime")){
+        //     if (objmonitordata[rowid].difftime<10){
+        //         tmpstr = tmpstr + "<td></td>";
+        //     }else{
+        //         tmpstr = tmpstr + "<td> "+ objmonitordata[rowid].difftime +" </td>";
+        //     }
+        // }else{
+        //     tmpstr = tmpstr + "<td> - </td>";
+        // }
+
+        // difftime 2
+        if (objmonitordata[rowid].hasOwnProperty("dt")){
+            dt2list=objmonitordata[rowid].dt;
+            // dt2a = dt2list[0];
+            // dt2b = dt2list[1];
+            tmpstr = tmpstr + "<td> "+dt2list+" </td>";
+            // if (objmonitordata[rowid].difftime<10){
+            //     tmpstr = tmpstr + "<td></td>";
+            // }else{
+            //     tmpstr = tmpstr + "<td> "+ objmonitordata[rowid].difftime +" </td>";
+            // }
+        }else{
+            tmpstr = tmpstr + "<td> - </td>";
+        }
+
+
+
+        tmpstr = tmpstr + "</tr>";
+        tb.innerHTML = tb.innerHTML + tmpstr;
+        rowid = rowid+1;
+
+    }
+
+
+
+
+};
+</script>
+</head>
+<body bgcolor=#0e0e0e style="color:white">
+<table border=0 style="font-size:9px">
+    <tr>
+        <td><img src="/static/green.png" border=0></td><td>Health</td>
+        <td><img src="/static/yellow.png" border=0></td><td>Warning</td>
+        <td><img src="/static/red.png" border=0></td><td>Exception</td>
+    </tr>
+</table>
+<br>
+&nbsp;生产环境
+<table id="tb1" border="0" style="font-size:11px">
+<tr id="tbtitle" align="center">
+    <th width="120px" bgcolor="#343434">ServerName</th>
+    <th width="100px" bgcolor="#343434">CPU</th>
+    <th width="100px" bgcolor="#343434">Block</th>
+    <th width="100px" bgcolor="#343434">OpenTran</th>
+    <th width="100px" bgcolor="#343434">Memory</th>
+    <th width="100px" bgcolor="#343434">Disk</th>
+    <th width="50px"></th>
+</tr>
+</table><br>
+&nbsp;开发测试环境
+<table id="tb2" border="0" style="font-size:11px">
+    <tr id="tb2title" align="center">
+        <th width="120px" bgcolor="#343434">ServerName</th>
+        <th width="100px" bgcolor="#343434">CPU</th>
+        <th width="100px" bgcolor="#343434">Block</th>
+        <th width="100px" bgcolor="#343434">OpenTran</th>
+        <th width="100px" bgcolor="#343434">Memory</th>
+        <th width="100px" bgcolor="#343434">Disk</th>
+        <th width="50px"></th>
+    </tr>
+    </table>
+<script>
+
+// var i  = document.getElementById("trd").rowIndex;
+// alert(i);
+
+setInterval("loadXMLDoc()",2000);
+setInterval("loadXMLDoc_noprd()",2000);
+// loadXMLDoc();
+
+</script>
+
+</body>
+</html>
