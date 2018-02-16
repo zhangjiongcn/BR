@@ -154,10 +154,10 @@ def index(request):
                         if disk2freepercent<disk2minpercent:
                             disk2minpercent = disk2freepercent
 
-                    if disk2freepercent<5 and disk2diskfree < 5368709120 :
+                    if disk2freepercent<8 and disk2diskfree < 10737418240 :
                         if disk2red == 0:
                             disk2red = 1
-                    elif disk2freepercent<15 and disk2diskfree < 10737418240 :
+                    elif disk2freepercent<15 and disk2diskfree < 16106127360 :
                         if disk2yellow == 0:
                             disk2yellow = 1
                     else :
