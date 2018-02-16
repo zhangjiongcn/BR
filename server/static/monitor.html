@@ -42,10 +42,17 @@ function loadXMLDoc_noprd(){
     xmlhttp2.send();
 };
 
-
+var t
+function timedCount_prd()
+{
+    loadXMLDoc();
+    t = setTimeout("timedCount_prd()",2000);
+    // alert('ok');
+};
 
 function adddiv(){
     var objmonitordata = eval ('(' + monitordata + ')');
+    monitordata = '';
 
     divname = objmonitordata[0].svrname;
     
@@ -81,14 +88,6 @@ function adddiv(){
         tmpstr="";
         tmpstr = tmpstr + "<tr align=\"center\" id=\"" + objmonitordata[rowid].svrname + "\"><td>" + objmonitordata[rowid].svrname + "</td>";
         
-        // diffuptime = 0;
-        // diffuptimestr = "";
-        // if (objmonitordata[rowid].hasOwnProperty("difftime")){
-        //     diffuptime = objmonitordata[rowid].difftime;
-        //     if (diffuptime>10){
-        //         diffuptimestr="_n"
-        //     }
-        // }
 
         //cpu 2 
         if (objmonitordata[rowid].hasOwnProperty("c")){
@@ -148,28 +147,10 @@ function adddiv(){
             tmpstr = tmpstr + "<td> - </td>";
         }
 
-        // // difftime
-        // if (objmonitordata[rowid].hasOwnProperty("difftime")){
-        //     if (objmonitordata[rowid].difftime<10){
-        //         tmpstr = tmpstr + "<td></td>";
-        //     }else{
-        //         tmpstr = tmpstr + "<td> "+ objmonitordata[rowid].difftime +" </td>";
-        //     }
-        // }else{
-        //     tmpstr = tmpstr + "<td> - </td>";
-        // }
-
         // difftime 2
         if (objmonitordata[rowid].hasOwnProperty("dt")){
             dt2list=objmonitordata[rowid].dt;
-            // dt2a = dt2list[0];
-            // dt2b = dt2list[1];
             tmpstr = tmpstr + "<td> "+dt2list+" </td>";
-            // if (objmonitordata[rowid].difftime<10){
-            //     tmpstr = tmpstr + "<td></td>";
-            // }else{
-            //     tmpstr = tmpstr + "<td> "+ objmonitordata[rowid].difftime +" </td>";
-            // }
         }else{
             tmpstr = tmpstr + "<td> - </td>";
         }
@@ -182,7 +163,8 @@ function adddiv(){
 
     }
 
-
+    objmonitordata = null ; 
+    tb = null ;
 
 
 };
@@ -343,7 +325,6 @@ function adddiv_noprd(){
         <td><img src="/static/red.png" border=0></td><td>Exception</td>
     </tr>
 </table>
-<br>
 &nbsp;生产环境
 <table id="tb1" border="0" style="font-size:11px">
 <tr id="tbtitle" align="center">
@@ -373,7 +354,9 @@ function adddiv_noprd(){
 // var i  = document.getElementById("trd").rowIndex;
 // alert(i);
 
-setInterval("loadXMLDoc()",2500);
+// setInterval("loadXMLDoc()",2500);
+
+timedCount_prd();
 // setInterval("loadXMLDoc_noprd()",2000);
 // loadXMLDoc();
 
