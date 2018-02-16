@@ -5,6 +5,7 @@ var monitordata='';
 var monitordata_noprd='';
 
 function loadXMLDoc(){
+    var xmlhttp ;
     if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
         xmlhttp=new XMLHttpRequest();
     }else{
@@ -14,8 +15,9 @@ function loadXMLDoc(){
 
     xmlhttp.onreadystatechange=function(){
     if (xmlhttp.readyState==4 && xmlhttp.status==200){
-            monitordata=xmlhttp.responseText;
-            adddiv();
+            // monitordata=xmlhttp.responseText;
+            adddiv(xmlhttp.responseText);
+            xmlhttp = null;
         }
     }
 
@@ -43,18 +45,22 @@ function loadXMLDoc_noprd(){
 };
 
 var t
+var st = null;
+var ot = null;
 function timedCount_prd()
 {
-    loadXMLDoc();
-    t = setTimeout("timedCount_prd()",2000);
+    clearTimeout(st); 
+    ot = loadXMLDoc();
+    ot = null;
+    st = setTimeout("timedCount_prd()",3000);
+
     // alert('ok');
 };
 
-function adddiv(){
-    var objmonitordata = eval ('(' + monitordata + ')');
-    monitordata = '';
+function adddiv(monitordatastr){
+    var objmonitordata = eval ('(' + monitordatastr + ')');
 
-    divname = objmonitordata[0].svrname;
+    // divname = objmonitordata[0].svrname;
     
     var tb = document.getElementById("tb1");
     var svrcounts = objmonitordata.length;
@@ -155,8 +161,6 @@ function adddiv(){
             tmpstr = tmpstr + "<td> - </td>";
         }
 
-
-
         tmpstr = tmpstr + "</tr>";
         tb.innerHTML = tb.innerHTML + tmpstr;
         rowid = rowid+1;
@@ -164,8 +168,26 @@ function adddiv(){
     }
 
     objmonitordata = null ; 
-    tb = null ;
-
+    tb = null ;    
+    svrcounts = null ;
+    tmpstr = null ;
+    rowid = null;
+    iconcpu = null;
+    iconblock = null;
+    iconopentran = null;
+    iconmem = null;
+    memtotal = 0;
+    memfree = null;
+    icondisk = null;
+    icondisk_red = null;
+    icondisk_green = null;
+    icondisk_yellow = null;
+    icondisk_red = null;
+    icondisk_yellow = null;
+    cpu2a = null;
+    cpu2b = null;
+    diffuptime  = null;
+    diffuptimestr  = null;
 
 };
 
